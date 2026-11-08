@@ -21,6 +21,7 @@ MODELS = {
     "Qwen/Qwen2.5-VL-7B-Instruct": None,                           # full weights
     "LinWeizheDragon/PreFLMR_ViT-G": None,                          # full weights
     "laion/CLIP-ViT-bigG-14-laion2B-39B-b160k": ["*.json", "*.txt"],  # image processor config only
+    "bert-base-uncased": ["*.json", "*.txt"],  # PreFLMR's modeling code loads this config at init
 }
 
 
