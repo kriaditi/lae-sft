@@ -37,3 +37,4 @@ export REPRO_TIME="${REPRO_TIME:-24:00:00}"
 # ---- experiment constants (from the authors' P17 protocol) ---------------
 export SEED=42
 export INFOSEEK_N_EXPECTED=496   # authors' reported n (500 drawn, 4 excluded); see lae/recover_subset.py
+export PYTHONUNBUFFERED=1   # show Python progress in logs immediately
