@@ -35,9 +35,8 @@ EOF
 # ---- models + data -------------------------------------------------------
 "$PY" "$PROJ/lae/fetch_assets.py" --authors-dir "$AUTHORS_DIR" --what models,infoseek
 
-n_img=$(find "$AUTHORS_DIR/data/infoseek/images/val" -type f | wc -l)
-log "query images on disk: $n_img (need $INFOSEEK_N_EXPECTED)"
-(( n_img >= INFOSEEK_N_EXPECTED )) || die "too few images"
+# fetch_assets.py exits non-zero unless every evaluation question has its image file.
+log "image files on disk: $(find "$AUTHORS_DIR/data/infoseek/images/val" -type f | wc -l) (unique images; questions can share one)"
 
 du -sh "$HF_HOME" 2>/dev/null | sed 's/^/   HF cache: /'
 mark_ok setup_env "job ${SLURM_JOB_ID:-local}"

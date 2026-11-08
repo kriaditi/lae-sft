@@ -53,13 +53,15 @@ def fetch_infoseek(authors_dir: Path) -> None:
         raise SystemExit(f"ERROR: {len(missing_q)} subset qids not in val parquet, e.g. {missing_q[:3]}")
 
     image_dir = authors_dir / "data/infoseek/images/val"
+    unique = sorted({by_qid[q] for q in subset})  # several questions can share one image
     wanted = {}  # basename -> relative img_path
-    for q in subset:
-        rel = by_qid[q]
+    for rel in unique:
         if not (image_dir / rel).exists():
             wanted[Path(rel).name] = rel
-    log(f"images: {len(subset)} needed, {len(subset) - len(wanted)} already on disk")
+    log(f"images: {len(subset)} questions use {len(unique)} unique images; "
+        f"{len(unique) - len(wanted)} already on disk, {len(wanted)} to extract")
     if not wanted:
+        verify_images(subset, by_qid, image_dir)
         return
 
     tar_path = ds.download_val_images_tar()
@@ -81,6 +83,16 @@ def fetch_infoseek(authors_dir: Path) -> None:
     if wanted:
         raise SystemExit(f"ERROR: {len(wanted)} images not found in tar, e.g. {list(wanted.values())[:3]}")
     log("images: all subset images extracted")
+    verify_images(subset, by_qid, image_dir)
+
+
+def verify_images(subset: list[str], by_qid: dict[str, str], image_dir: Path) -> None:
+    """Every evaluation question must have a non-empty image file."""
+    bad = [q for q in subset if not (image_dir / by_qid[q]).is_file()
+           or (image_dir / by_qid[q]).stat().st_size == 0]
+    if bad:
+        raise SystemExit(f"ERROR: {len(bad)} questions have no image file, e.g. {bad[:3]}")
+    log(f"images: verified, all {len(subset)} questions have their image file")
 
 
 def main() -> None:
