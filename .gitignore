@@ -1,0 +1,8 @@
+third_party/
+hf_cache/
+.uv_cache/
+.uv_python/
+runs/
+logs/
+status/
+__pycache__/

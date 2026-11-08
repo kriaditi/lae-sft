@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+#SBATCH --mail-type=END,FAIL
+#SBATCH --mail-user=ak2877@cornell.edu
+# CPU job: build the authors' pinned Python env with uv, then download models,
+# InfoSeek data, and the subset's query images. Rerunnable.
+set -euo pipefail
+: "${PROJ:?PROJ not set; submit via scripts/00_setup.sh}"
+source "$PROJ/scripts/config.sh"
+source "$PROJ/scripts/lib.sh"
+mkdirs
+
+trap 'rc=$?; [[ $rc -ne 0 ]] && mark_failed setup_env "exit $rc job ${SLURM_JOB_ID:-local}"; exit $rc' EXIT
+log "host $(hostname)  job ${SLURM_JOB_ID:-local}"
+
+# ---- uv ----------------------------------------------------------------
+export PATH="$HOME/.local/bin:$PATH"
+if ! command -v uv >/dev/null; then
+  log "installing uv to ~/.local/bin"
+  curl -LsSf https://astral.sh/uv/install.sh | sh
+fi
+log "uv $(uv --version)"
+
+# ---- environment exactly as the authors' uv.lock pins it ----------------
+cd "$AUTHORS_DIR"
+uv python install 3.11
+uv sync --frozen --extra dev
+uv pip install --python "$PY" "matplotlib>=3.8"   # used by the P17 plot, not in their lock
+"$PY" - <<'EOF'
+import torch, transformers, tts_kbvqa, matplotlib
+print(f"torch {torch.__version__}  transformers {transformers.__version__}  "
+      f"cuda build {torch.version.cuda}")
+assert transformers.__version__ == "4.49.0", "transformers must match the paper (4.49.0)"
+EOF
+
+# ---- models + data -------------------------------------------------------
+"$PY" "$PROJ/lae/fetch_assets.py" --authors-dir "$AUTHORS_DIR" --what models,infoseek
+
+n_img=$(find "$AUTHORS_DIR/data/infoseek/images/val" -type f | wc -l)
+log "query images on disk: $n_img (need $INFOSEEK_N_EXPECTED)"
+(( n_img >= INFOSEEK_N_EXPECTED )) || die "too few images"
+
+du -sh "$HF_HOME" 2>/dev/null | sed 's/^/   HF cache: /'
+mark_ok setup_env "job ${SLURM_JOB_ID:-local}"
+log "setup_env OK"

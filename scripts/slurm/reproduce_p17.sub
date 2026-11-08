@@ -1,0 +1,57 @@
+#!/usr/bin/env bash
+#SBATCH --mail-type=END,FAIL
+#SBATCH --mail-user=ak2877@cornell.edu
+# GPU job: exact reproduction of the authors' P17 (Qwen2.5-VL-7B x InfoSeek,
+# k in {1,3,5,10,20} x gold first/middle/last), with their unmodified protocol.
+#   step 1  PreFLMR index over the 98K-passage InfoSeek KB (resumable)
+#   step 2  P17 runner (retrieval + reader caches resume after preemption)
+#   step 3  compare against the authors' committed numbers
+set -euo pipefail
+: "${PROJ:?PROJ not set; submit via scripts/01_reproduce.sh}"
+source "$PROJ/scripts/config.sh"
+source "$PROJ/scripts/lib.sh"
+mkdirs
+
+RUN_DIR="${RUN_DIR:-$RUNS_DIR/p17_repro}"
+STAGE=reproduce_p17
+trap 'rc=$?; [[ $rc -ne 0 ]] && mark_failed $STAGE "exit $rc job ${SLURM_JOB_ID:-local}"; exit $rc' EXIT
+
+log "host $(hostname)  job ${SLURM_JOB_ID:-local}  restart ${SLURM_RESTART_COUNT:-0}"
+nvidia-smi --query-gpu=name,memory.total,driver_version --format=csv,noheader | sed 's/^/   GPU: /'
+"$PY" -c "import torch; assert torch.cuda.is_available(), 'CUDA not available'; print('   torch', torch.__version__, torch.cuda.get_device_name(0))"
+
+cd "$AUTHORS_DIR"
+export HF_HUB_OFFLINE=1   # everything was downloaded by setup; never fetch inside a GPU job
+
+# ---- step 1: PreFLMR index ------------------------------------------------
+INDEX_DIR="$AUTHORS_DIR/data/index/preflmr_infoseek"
+if "$PY" -c "import json,sys; m=json.load(open('$INDEX_DIR/manifest.json')); sys.exit(0 if 'build_wall_s' in m else 1)" 2>/dev/null; then
+  log "step 1: index already complete"
+else
+  log "step 1: building PreFLMR index -> $INDEX_DIR"
+  "$PY" scripts/build_preflmr_index.py --out-dir "$INDEX_DIR"
+fi
+"$PY" -c "import json; m=json.load(open('$INDEX_DIR/manifest.json')); print(f\"   index: {m['n_passages']} passages, {m['n_shards']} shards, build {m['build_wall_s']/60:.1f} min\")"
+
+# ---- step 2: P17 ---------------------------------------------------------
+mkdir -p "$RUN_DIR"
+log "step 2: P17 runner -> $RUN_DIR"
+P17_OUT="$RUN_DIR" P17_N_EXPECTED="$INFOSEEK_N_EXPECTED" \
+  "$PY" scripts/run_p17_reader_bottleneck.py
+need_file "$RUN_DIR/per_cell_summary.json" "(P17 did not finish)"
+git -C "$AUTHORS_DIR" rev-parse HEAD > "$RUN_DIR/authors_commit.txt"
+git -C "$AUTHORS_DIR" diff > "$RUN_DIR/authors_patch.diff"
+
+# ---- step 3: compare with the paper --------------------------------------
+log "step 3: compare with the authors' committed P17 numbers"
+rc=0
+"$PY" "$PROJ/lae/compare_reproduction.py" \
+  --paper "$AUTHORS_DIR/results/p17/per_cell_summary.json" \
+  --ours  "$RUN_DIR/per_cell_summary.json" \
+  --out   "$RESULTS_DIR/paper_reproduction.csv" || rc=$?
+case $rc in
+  0) mark_ok $STAGE "job ${SLURM_JOB_ID:-local} -> $RESULTS_DIR/paper_reproduction.csv" ;;
+  2) mark_ok $STAGE "job ${SLURM_JOB_ID:-local} RAN, BUT n or fallback count differs from the paper: see log" ;;
+  *) exit $rc ;;
+esac
+log "reproduce_p17 OK"
