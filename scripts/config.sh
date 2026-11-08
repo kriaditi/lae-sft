@@ -38,3 +38,12 @@ export REPRO_TIME="${REPRO_TIME:-24:00:00}"
 export SEED=42
 export INFOSEEK_N_EXPECTED=496   # authors' reported n (500 drawn, 4 excluded); see lae/recover_subset.py
 export PYTHONUNBUFFERED=1   # show Python progress in logs immediately
+
+# ---- stage 2: training data
+export TRAIN_DATA_DIR="${TRAIN_DATA_DIR:-$PROJ/data/train}"
+export TRAIN_POOL="${TRAIN_POOL:-150000}"
+export TRAIN_N="${TRAIN_N:-20000}"
+export DEV_N="${DEV_N:-500}"
+export BALANCED_SEEDS="${BALANCED_SEEDS:-0 1}"
+export BUILD_TIME="${BUILD_TIME:-24:00:00}"
+export BUILD_BATCH="${BUILD_BATCH:-32}"

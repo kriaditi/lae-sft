@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+#SBATCH --mail-type=END,FAIL
+#SBATCH --mail-user=ak2877@cornell.edu
+# GPU job: build the standard and position-balanced SFT training data.
+# Resumable: rerunning continues from the cached candidates, images and retrieval.
+set -euo pipefail
+: "${PROJ:?PROJ not set; run via scripts/02_build_data.sh}"
+source "$PROJ/scripts/config.sh"
+source "$PROJ/scripts/lib.sh"
+mkdirs
+
+STAGE=build_data
+trap 'rc=$?; [[ $rc -ne 0 ]] && mark_failed $STAGE "exit $rc job ${SLURM_JOB_ID:-local}"; exit $rc' EXIT
+log "host $(hostname)  job ${SLURM_JOB_ID:-local}  restart ${SLURM_RESTART_COUNT:-0}"
+nvidia-smi --query-gpu=name,memory.used,memory.total --format=csv,noheader | sed 's/^/   GPU: /'
+
+cd "$AUTHORS_DIR"
+"$PY" "$PROJ/lae/build_train_data.py" \
+  --authors-dir "$AUTHORS_DIR" \
+  --out "$TRAIN_DATA_DIR" \
+  --pool "$TRAIN_POOL" --train-n "$TRAIN_N" --dev-n "$DEV_N" \
+  --balanced-seeds $BALANCED_SEEDS --seed "$SEED" --batch "$BUILD_BATCH"
+
+need_file "$TRAIN_DATA_DIR/final/build_stats.json"
+mark_ok $STAGE "job ${SLURM_JOB_ID:-local} -> $TRAIN_DATA_DIR/final"
+log "build_data OK"
