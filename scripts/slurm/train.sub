@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+#SBATCH --mail-type=END,FAIL
+#SBATCH --mail-user=ak2877@cornell.edu
+# GPU job: one LoRA SFT run. Inputs (env): RUN_COND, RUN_SEED, SMOKE (0/1).
+# Resumable: rerunning continues from the last checkpoint in the run directory.
+set -euo pipefail
+: "${PROJ:?PROJ not set; run via scripts/03_train.sh}"
+: "${RUN_COND:?}" "${RUN_SEED:?}"
+source "$PROJ/scripts/config.sh"
+source "$PROJ/scripts/lib.sh"
+mkdirs
+
+NAME="${RUN_COND}_seed${RUN_SEED}"
+SMOKE="${SMOKE:-0}"
+if [[ "$SMOKE" == 1 ]]; then NAME="smoke_${NAME}"; fi
+STAGE="train_${NAME}"
+OUT="$RUNS_DIR/train/$NAME"
+trap 'rc=$?; [[ $rc -ne 0 ]] && mark_failed $STAGE "exit $rc job ${SLURM_JOB_ID:-local}"; exit $rc' EXIT
+
+log "run $NAME  host $(hostname)  job ${SLURM_JOB_ID:-local}  restart ${SLURM_RESTART_COUNT:-0}"
+nvidia-smi --query-gpu=name,memory.used,memory.total --format=csv,noheader | sed 's/^/   GPU: /'
+
+extra=()
+if [[ "$SMOKE" == 1 ]]; then extra+=(--smoke); fi
+cd "$AUTHORS_DIR"
+"$PY" "$PROJ/lae/train_lora.py" \
+  --authors-dir "$AUTHORS_DIR" --data-dir "$TRAIN_DATA_DIR/final" \
+  --condition "$RUN_COND" --seed "$RUN_SEED" --out "$OUT" \
+  --lora-r "$LORA_R" --lora-alpha "$LORA_ALPHA" --lora-dropout "$LORA_DROPOUT" \
+  --lr "$LR" --epochs "$EPOCHS" --per-device-batch "$PER_DEVICE_BATCH" --grad-accum "$GRAD_ACCUM" \
+  --save-steps "$SAVE_STEPS" "${extra[@]}"
+
+need_file "$OUT/adapter/adapter_model.safetensors" "(training did not produce an adapter)"
+need_file "$OUT/train_metrics.json"
+mark_ok "$STAGE" "job ${SLURM_JOB_ID:-local} -> $OUT/adapter"
+log "$STAGE OK"
