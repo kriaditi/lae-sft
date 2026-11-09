@@ -28,7 +28,7 @@ cd "$AUTHORS_DIR"
   --condition "$RUN_COND" --seed "$RUN_SEED" --out "$OUT" \
   --lora-r "$LORA_R" --lora-alpha "$LORA_ALPHA" --lora-dropout "$LORA_DROPOUT" \
   --lr "$LR" --epochs "$EPOCHS" --per-device-batch "$PER_DEVICE_BATCH" --grad-accum "$GRAD_ACCUM" \
-  --save-steps "$SAVE_STEPS" "${extra[@]}"
+  --save-steps "$SAVE_STEPS" --eval-steps "$EVAL_STEPS" "${extra[@]}"
 
 need_file "$OUT/adapter/adapter_model.safetensors" "(training did not produce an adapter)"
 need_file "$OUT/train_metrics.json"

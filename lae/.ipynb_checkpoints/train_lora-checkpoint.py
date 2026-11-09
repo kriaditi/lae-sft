@@ -158,7 +158,8 @@ def main(argv=None, model_override=None, processor_override=None, passages_overr
     ap.add_argument("--per-device-batch", type=int, default=4)
     ap.add_argument("--grad-accum", type=int, default=4)
     ap.add_argument("--warmup-ratio", type=float, default=0.03)
-    ap.add_argument("--save-steps", type=int, default=250)
+    ap.add_argument("--save-steps", type=int, default=100)
+    ap.add_argument("--eval-steps", type=int, default=250)
     ap.add_argument("--max-len", type=int, default=12000)
     ap.add_argument("--workers", type=int, default=4)
     ap.add_argument("--smoke", action="store_true", help="short run: 160 train / 32 dev examples, 10 steps")
@@ -214,7 +215,7 @@ def main(argv=None, model_override=None, processor_override=None, passages_overr
         weight_decay=0.0, max_grad_norm=1.0, bf16=torch.cuda.is_available(),
         gradient_checkpointing=True, gradient_checkpointing_kwargs={"use_reentrant": False},
         logging_steps=1 if args.smoke else 10, eval_strategy="steps",
-        eval_steps=5 if args.smoke else args.save_steps, save_strategy="steps",
+        eval_steps=5 if args.smoke else args.eval_steps, save_strategy="steps",
         save_steps=5 if args.smoke else args.save_steps, save_total_limit=2,
         dataloader_num_workers=0 if args.smoke else args.workers, remove_unused_columns=False,
         report_to="none", optim="adamw_torch", disable_tqdm=True, label_names=["labels"])
