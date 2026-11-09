@@ -6,4 +6,4 @@ runs/
 logs/
 status/
 __pycache__/
-data/
+/data/
