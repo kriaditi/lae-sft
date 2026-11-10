@@ -37,6 +37,7 @@ compare() {
     --paper "$AUTHORS_DIR/results/p17/per_cell_summary.json" \
     --frozen "$RUNS_DIR/p17_repro" \
     --eval-root "$RUNS_DIR/eval" --train-root "$RUNS_DIR/train" \
+    --isolated "$RUNS_DIR/isolated" \
     --out "$RESULTS_DIR"
 }
 if [[ $ONLY_COMPARE == 1 ]]; then compare; exit 0; fi

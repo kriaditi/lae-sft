@@ -3,3 +3,4 @@ Paper reproduction (authors' reported),-,reported in paper,45.16,32.26,28.63,16.
 Frozen Qwen,"measured (1 run, greedy decoding)","measured (1 run, greedy decoding)",45.56,33.27,28.83,16.73
 Standard LoRA SFT,mean of 2 seeds,mean of 2 seeds,54.84,55.24,53.93,0.91
 Balanced LoRA SFT,mean of 2 seeds,mean of 2 seeds,54.33,55.54,54.23,0.1
+"Isolated reading (frozen, mean log-prob)",measured (order-invariant by construction),measured (order-invariant by construction),30.85,30.85,30.85,0.0
