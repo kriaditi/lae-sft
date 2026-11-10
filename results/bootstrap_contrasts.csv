@@ -1,0 +1,16 @@
+contrast,estimate_pp,ci95_low_pp,ci95_high_pp,excludes_zero,n_questions
+Frozen Qwen: gap (first - last),16.73,12.9,20.77,True,496
+Standard LoRA SFT: gap (first - last),0.91,-1.21,3.02,False,496
+Balanced LoRA SFT: gap (first - last),0.1,-1.81,2.02,False,496
+Standard LoRA SFT vs Frozen: change in gap,-15.83,-20.16,-11.79,True,496
+Standard LoRA SFT vs Frozen: accuracy at gold first,9.27,4.84,13.61,True,496
+Standard LoRA SFT vs Frozen: accuracy at gold middle,21.98,17.74,26.21,True,496
+Standard LoRA SFT vs Frozen: accuracy at gold last,25.1,20.67,29.44,True,496
+Balanced LoRA SFT vs Frozen: change in gap,-16.63,-20.87,-12.5,True,496
+Balanced LoRA SFT vs Frozen: accuracy at gold first,8.77,4.33,13.21,True,496
+Balanced LoRA SFT vs Frozen: accuracy at gold middle,22.28,18.15,26.51,True,496
+Balanced LoRA SFT vs Frozen: accuracy at gold last,25.4,21.07,29.74,True,496
+Balanced LoRA SFT vs Standard LoRA SFT: change in gap,-0.81,-3.02,1.41,False,496
+Balanced LoRA SFT vs Standard LoRA SFT: accuracy at gold first,-0.5,-2.32,1.31,False,496
+Balanced LoRA SFT vs Standard LoRA SFT: accuracy at gold middle,0.3,-1.61,2.22,False,496
+Balanced LoRA SFT vs Standard LoRA SFT: accuracy at gold last,0.3,-1.61,2.22,False,496

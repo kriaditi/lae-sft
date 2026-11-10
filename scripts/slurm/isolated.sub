@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+#SBATCH --mail-type=END,FAIL
+#SBATCH --mail-user=ak2877@cornell.edu
+# GPU job: isolated-reading baseline on the frozen reader (496 questions x 10 passages).
+set -euo pipefail
+: "${PROJ:?PROJ not set; run via scripts/05_isolated.sh}"
+source "$PROJ/scripts/config.sh"
+source "$PROJ/scripts/lib.sh"
+mkdirs
+
+STAGE=isolated
+OUT="$RUNS_DIR/isolated"
+trap 'rc=$?; [[ $rc -ne 0 ]] && mark_failed $STAGE "exit $rc job ${SLURM_JOB_ID:-local}"; exit $rc' EXIT
+log "isolated reading  host $(hostname)  job ${SLURM_JOB_ID:-local}"
+nvidia-smi --query-gpu=name,memory.used,memory.total --format=csv,noheader | sed 's/^/   GPU: /'
+
+need_file "$RUNS_DIR/p17_repro/predictions_k10_first.jsonl" "(run the reproduction first)"
+cd "$AUTHORS_DIR"
+env -u LAE_ADAPTER "$PY" "$PROJ/lae/isolated_reading.py" \
+  --authors-dir "$AUTHORS_DIR" --frozen "$RUNS_DIR/p17_repro" --out "$OUT"
+need_file "$OUT/summary.json"
+mark_ok $STAGE "job ${SLURM_JOB_ID:-local} -> $OUT"
+log "isolated OK"

@@ -1,0 +1,6 @@
+model,run,status,n,k1,k3_first,k3_middle,k3_last,k3_gap,k5_first,k5_middle,k5_last,k5_gap,k10_first,k10_middle,k10_last,k10_gap,k20_first,k20_middle,k20_last,k20_gap
+Frozen Qwen2.5-VL-7B,p17_repro,measured,496,54.64,48.79,39.92,41.13,7.66,46.77,37.9,35.28,11.49,45.56,33.27,28.83,16.73,43.35,26.41,26.81,16.54
+Standard LoRA SFT,standard_seed0,measured,496,64.52,59.68,59.68,61.49,-1.81,57.66,59.48,58.87,-1.21,55.85,54.64,54.64,1.21,52.02,51.01,50.2,1.82
+Standard LoRA SFT,standard_seed1,measured,496,62.7,58.47,60.08,60.89,-2.42,58.67,57.86,58.87,-0.2,53.83,55.85,53.23,0.6,51.41,51.61,51.41,0.0
+Balanced LoRA SFT,balanced_s0_seed0,measured,496,64.52,58.67,61.09,60.89,-2.22,57.46,58.67,58.87,-1.41,54.23,55.85,55.04,-0.81,49.8,50.4,50.2,-0.4
+Balanced LoRA SFT,balanced_s1_seed1,measured,496,64.11,57.86,60.48,60.69,-2.83,56.65,58.27,58.87,-2.22,54.44,55.24,53.43,1.01,52.42,50.2,51.21,1.21

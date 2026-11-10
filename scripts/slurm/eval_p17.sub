@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+#SBATCH --mail-type=END,FAIL
+#SBATCH --mail-user=ak2877@cornell.edu
+# GPU job: evaluate one reader with the authors' P17 protocol (13 cells, 496 questions).
+# Inputs (env): EVAL_NAME, ADAPTER (path to a LoRA adapter; empty = frozen reader).
+# The authors' retrieval cache from our reproduction is copied in first, so every
+# model is scored on exactly the same passage lists.
+set -euo pipefail
+: "${PROJ:?PROJ not set; run via scripts/04_evaluate.sh}"
+: "${EVAL_NAME:?}"
+source "$PROJ/scripts/config.sh"
+source "$PROJ/scripts/lib.sh"
+mkdirs
+
+STAGE="eval_${EVAL_NAME}"
+OUT="$RUNS_DIR/eval/$EVAL_NAME"
+REF="$RUNS_DIR/p17_repro/retrieval_p17.jsonl"
+trap 'rc=$?; [[ $rc -ne 0 ]] && mark_failed $STAGE "exit $rc job ${SLURM_JOB_ID:-local}"; exit $rc' EXIT
+log "eval $EVAL_NAME  adapter=${ADAPTER:-<none, frozen>}  host $(hostname)  job ${SLURM_JOB_ID:-local}"
+nvidia-smi --query-gpu=name,memory.used,memory.total --format=csv,noheader | sed 's/^/   GPU: /'
+
+need_file "$REF" "(run the reproduction first)"
+if [[ -n "${ADAPTER:-}" ]]; then need_file "$ADAPTER/adapter_model.safetensors"; fi
+mkdir -p "$OUT"
+if [[ -f "$OUT/retrieval_p17.jsonl" ]]; then
+  cmp -s "$REF" "$OUT/retrieval_p17.jsonl" || die "$OUT/retrieval_p17.jsonl differs from the reproduction's"
+else
+  cp "$REF" "$OUT/retrieval_p17.jsonl"
+fi
+
+cd "$AUTHORS_DIR"
+LAE_ADAPTER="${ADAPTER:-}" P17_OUT="$OUT" P17_N_EXPECTED="$INFOSEEK_N_EXPECTED" \
+  "$PY" scripts/run_p17_reader_bottleneck.py
+need_file "$OUT/per_cell_summary.json" "(P17 did not finish)"
+"$PY" - "$OUT/per_cell_summary.json" "${ADAPTER:-}" <<'EOF'
+import json, sys
+s = json.load(open(sys.argv[1]))
+assert s.get("lae_adapter", "") == sys.argv[2], f"summary says adapter {s.get('lae_adapter')!r}, expected {sys.argv[2]!r}"
+assert s["n_kept_primary"] == 496, s["n_kept_primary"]
+print(f"   verified: adapter={sys.argv[2] or 'none'}  n={s['n_kept_primary']}  k10 first/middle/last = "
+      + " / ".join(f"{100*s['primary'][c]['acc']:.2f}" for c in ("k10_first", "k10_middle", "k10_last")))
+EOF
+git -C "$AUTHORS_DIR" diff > "$OUT/authors_patch.diff"
+mark_ok "$STAGE" "job ${SLURM_JOB_ID:-local} -> $OUT"
+log "$STAGE OK"
