@@ -1,0 +1,73 @@
+== M2KR InfoSeek files ==
+  Infoseek_data/test-00000-of-00001.parquet                                   17.8 MB
+  Infoseek_data/train-00000-of-00021.parquet                                 164.5 MB
+  Infoseek_data/train-00001-of-00021.parquet                                 166.3 MB
+  Infoseek_data/train-00002-of-00021.parquet                                 167.2 MB
+  Infoseek_data/train-00003-of-00021.parquet                                 166.0 MB
+  Infoseek_data/train-00004-of-00021.parquet                                 165.3 MB
+  Infoseek_data/train-00005-of-00021.parquet                                 165.4 MB
+  Infoseek_data/train-00006-of-00021.parquet                                 166.6 MB
+  Infoseek_data/train-00007-of-00021.parquet                                 164.9 MB
+  Infoseek_data/train-00008-of-00021.parquet                                 165.2 MB
+  Infoseek_data/train-00009-of-00021.parquet                                 165.7 MB
+  Infoseek_data/train-00010-of-00021.parquet                                 165.2 MB
+  Infoseek_data/train-00011-of-00021.parquet                                 165.6 MB
+  Infoseek_data/train-00012-of-00021.parquet                                 165.3 MB
+  Infoseek_data/train-00013-of-00021.parquet                                 165.4 MB
+  Infoseek_data/train-00014-of-00021.parquet                                 167.1 MB
+  Infoseek_data/train-00015-of-00021.parquet                                 164.3 MB
+  Infoseek_data/train-00016-of-00021.parquet                                 164.5 MB
+  Infoseek_data/train-00017-of-00021.parquet                                 165.3 MB
+  Infoseek_data/train-00018-of-00021.parquet                                 165.4 MB
+  Infoseek_data/train-00019-of-00021.parquet                                 165.4 MB
+  Infoseek_data/train-00020-of-00021.parquet                                 166.5 MB
+  Infoseek_passages/test_passages-00000-of-00001.parquet                      39.5 MB
+  Infoseek_passages/train_passages-00000-of-00001.parquet                     39.5 MB
+== M2KR_Images InfoSeek files ==
+  Infoseek/infoseek_test_images.tar                                          41.64 GB
+  Infoseek/infoseek_train_images.tar                                         47.96 GB
+  Infoseek/infoseek_val_images.tar                                            8.96 GB
+  Infoseek/readme                                                             0.00 GB
+
+== train questions ==
+  rows: 676441   columns: ['ROIs', 'answer_eval', 'answers', 'data_split', 'entity_id', 'entity_text', 'found', 'gold_answer', 'image_id', 'image_path', 'img_caption', 'img_path', 'instruction', 'objects', 'pos_item_contents', 'pos_item_ids', 'question', 'question_id', 'question_type', 'related_item_ids', 'wikidata_range', 'wikidata_value']
+  sample row: {
+ "question_id": "infoseek_train_00109281",
+ "image_id": "oven_00712627",
+ "question": "What is the highest observed lifespan of this animal?",
+ "answers": "['19']",
+ "answer_eval": "[]",
+ "data_split": "train",
+ "wikidata_value": "19.0",
+ "wikidata_range": "[17.1, 20.900000000000002]",
+ "entity_id": "Q632701",
+ "entity_text": "Ringtail",
+ "image_path": "/data/infoseek/infoseek/infoseek_images/images/oven_00712627.JPEG",
+ "gold_answer": "19",
+ "objects": "[{'attribute_scores': [0.32708123326301575, 0.1545645147562027, 0.05878911912441254, 0.05326005443930626, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,",
+ "related_item_ids": "['18891045', '18891046']",
+ "pos_item_ids": "['18891045', '18891046']",
+ "pos_item_contents": "['title: \"American Ringtail\" content: American Ringtail The American Ringtail Cat is a new experimental cat breed that started with a California cat n",
+ "ROIs": "[]",
+ "found": "False",
+ "img_caption": "a white face monkey sitting in a tree",
+ "instruction": "Utilizing the given image, obtain documents that respond to the following question: ",
+ "img_path": "oven_00712627.JPEG",
+ "question_type": "train"
+}
+  question_type: [('train', 676441)]
+  #positives per question (5 = 5+): [(1, 127598), (2, 120444), (3, 80834), (4, 48207), (5, 299358)]
+  #answers per question (5 = 5+): [(1, 69278), (2, 148964), (3, 87492), (4, 112307), (5, 258400)]
+  unique images: 586645   unique entities: 4353
+
+== train KB ==
+  passages: 98276
+  test KB passages: 98276   shared ids with train KB: 98276
+  train questions with >=1 positive in train KB: 676441 / 676441
+
+== overlap with the 496 evaluation questions ==
+  eval rows found: 496
+  train questions sharing an image file with eval: 32
+  train questions sharing an entity with eval:     11773
+  train questions sharing a gold passage id with eval: 6512
+  train question ids equal to eval ids: 0
