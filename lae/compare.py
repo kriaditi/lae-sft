@@ -180,6 +180,18 @@ def main() -> int:
         for p in POS:
             add(f"{b} vs {s}: accuracy at gold {p}", lambda i, p=p: V[b][p][i].mean() - V[s][p][i].mean())
 
+    # --- k = 20 contrasts (same questions, same bootstrap indices); isolated reading is k=10 only
+    V20 = {m: {p: vec(c, f"k20_{p}", qids) for p in POS} for m, c in models.items() if f"k20_first" in c}
+    g20 = lambda m, i: V20[m]["first"][i].mean() - V20[m]["last"][i].mean()
+    for m in V20:
+        add(f"[k=20] {m}: gap (first - last)", lambda i, m=m: g20(m, i))
+    for m in [x for x in V20 if x != "Frozen Qwen"]:
+        add(f"[k=20] {m} vs Frozen: change in gap", lambda i, m=m: g20(m, i) - g20("Frozen Qwen", i))
+    if s in V20 and b in V20:
+        add(f"[k=20] {b} vs {s}: change in gap", lambda i: g20(b, i) - g20(s, i))
+        for p in POS:
+            add(f"[k=20] {b} vs {s}: accuracy at gold {p}", lambda i, p=p: V20[b][p][i].mean() - V20[s][p][i].mean())
+
     # --- costs
     costs = [{"run": "p17_repro (frozen)", "train_hours": 0, "train_s_per_step": "-", "train_peak_gpu_gb": "-",
               "infer_mean_latency_s_k10": round(float(np.mean(frozen["latency"])), 3) if frozen["latency"] else "-",

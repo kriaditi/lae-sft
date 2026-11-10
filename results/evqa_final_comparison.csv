@@ -1,0 +1,5 @@
+model,status,gold_first,gold_middle,gold_last,first_minus_last_gap
+Paper P20 Qwen (authors' reported),reported in paper,63.2,38.6,36.8,26.4
+Frozen Qwen,measured,63.0,39.6,35.8,27.2
+Standard LoRA SFT,mean of 2 seeds,27.2,26.8,24.0,3.2
+Balanced LoRA SFT,mean of 2 seeds,27.5,28.1,27.6,-0.1

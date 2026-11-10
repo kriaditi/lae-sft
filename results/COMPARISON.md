@@ -1,4 +1,4 @@
-# Comparison (generated 2026-11-10 17:52)
+# Comparison (generated 2026-11-10 17:59)
 
 InfoSeek, authors' P17 protocol, k = 10, n = 496. Accuracy in %. Gap = gold first - gold last.
 
@@ -40,3 +40,12 @@ InfoSeek, authors' P17 protocol, k = 10, n = 496. Accuracy in %. Gap = gold firs
 | Balanced LoRA SFT vs Standard LoRA SFT: accuracy at gold first | -0.50 | [-2.32, +1.31] | no |
 | Balanced LoRA SFT vs Standard LoRA SFT: accuracy at gold middle | +0.30 | [-1.61, +2.22] | no |
 | Balanced LoRA SFT vs Standard LoRA SFT: accuracy at gold last | +0.30 | [-1.61, +2.22] | no |
+| [k=20] Frozen Qwen: gap (first - last) | +16.53 | [+12.70, +20.56] | yes |
+| [k=20] Standard LoRA SFT: gap (first - last) | +0.91 | [-0.91, +2.82] | no |
+| [k=20] Balanced LoRA SFT: gap (first - last) | +0.40 | [-1.61, +2.52] | no |
+| [k=20] Standard LoRA SFT vs Frozen: change in gap | -15.63 | [-19.76, -11.49] | yes |
+| [k=20] Balanced LoRA SFT vs Frozen: change in gap | -16.13 | [-20.36, -11.90] | yes |
+| [k=20] Balanced LoRA SFT vs Standard LoRA SFT: change in gap | -0.50 | [-2.82, +1.71] | no |
+| [k=20] Balanced LoRA SFT vs Standard LoRA SFT: accuracy at gold first | -0.60 | [-2.52, +1.31] | no |
+| [k=20] Balanced LoRA SFT vs Standard LoRA SFT: accuracy at gold middle | -1.01 | [-2.82, +0.81] | no |
+| [k=20] Balanced LoRA SFT vs Standard LoRA SFT: accuracy at gold last | -0.10 | [-2.02, +1.81] | no |

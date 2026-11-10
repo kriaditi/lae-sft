@@ -1,0 +1,169 @@
+{
+  "frozen/first": {
+    "n": 500,
+    "acc": 0.63,
+    "acc_any_alt": 0.63,
+    "pred_words": 2.436,
+    "gen_tokens": 5.344,
+    "wrong_pred_substring_of_gold": 0.054,
+    "exact_match": 0.432
+  },
+  "frozen/middle": {
+    "n": 500,
+    "acc": 0.396,
+    "acc_any_alt": 0.396,
+    "pred_words": 2.506,
+    "gen_tokens": 5.538,
+    "wrong_pred_substring_of_gold": 0.03,
+    "exact_match": 0.266
+  },
+  "frozen/last": {
+    "n": 500,
+    "acc": 0.358,
+    "acc_any_alt": 0.358,
+    "pred_words": 2.46,
+    "gen_tokens": 5.436,
+    "wrong_pred_substring_of_gold": 0.026,
+    "exact_match": 0.242
+  },
+  "balanced_s0_seed0/first": {
+    "n": 500,
+    "acc": 0.28,
+    "acc_any_alt": 0.28,
+    "pred_words": 1.484,
+    "gen_tokens": 3.828,
+    "wrong_pred_substring_of_gold": 0.122,
+    "exact_match": 0.222
+  },
+  "balanced_s0_seed0/middle": {
+    "n": 500,
+    "acc": 0.294,
+    "acc_any_alt": 0.294,
+    "pred_words": 1.466,
+    "gen_tokens": 3.828,
+    "wrong_pred_substring_of_gold": 0.112,
+    "exact_match": 0.232
+  },
+  "balanced_s0_seed0/last": {
+    "n": 500,
+    "acc": 0.278,
+    "acc_any_alt": 0.278,
+    "pred_words": 1.482,
+    "gen_tokens": 3.828,
+    "wrong_pred_substring_of_gold": 0.108,
+    "exact_match": 0.21
+  },
+  "balanced_s1_seed1/first": {
+    "n": 500,
+    "acc": 0.27,
+    "acc_any_alt": 0.27,
+    "pred_words": 1.504,
+    "gen_tokens": 3.856,
+    "wrong_pred_substring_of_gold": 0.118,
+    "exact_match": 0.22
+  },
+  "balanced_s1_seed1/middle": {
+    "n": 500,
+    "acc": 0.268,
+    "acc_any_alt": 0.268,
+    "pred_words": 1.476,
+    "gen_tokens": 3.848,
+    "wrong_pred_substring_of_gold": 0.106,
+    "exact_match": 0.222
+  },
+  "balanced_s1_seed1/last": {
+    "n": 500,
+    "acc": 0.274,
+    "acc_any_alt": 0.274,
+    "pred_words": 1.496,
+    "gen_tokens": 3.886,
+    "wrong_pred_substring_of_gold": 0.092,
+    "exact_match": 0.214
+  },
+  "standard_seed0/first": {
+    "n": 500,
+    "acc": 0.284,
+    "acc_any_alt": 0.284,
+    "pred_words": 1.394,
+    "gen_tokens": 3.612,
+    "wrong_pred_substring_of_gold": 0.122,
+    "exact_match": 0.234
+  },
+  "standard_seed0/middle": {
+    "n": 500,
+    "acc": 0.274,
+    "acc_any_alt": 0.274,
+    "pred_words": 1.404,
+    "gen_tokens": 3.668,
+    "wrong_pred_substring_of_gold": 0.12,
+    "exact_match": 0.224
+  },
+  "standard_seed0/last": {
+    "n": 500,
+    "acc": 0.244,
+    "acc_any_alt": 0.244,
+    "pred_words": 1.404,
+    "gen_tokens": 3.668,
+    "wrong_pred_substring_of_gold": 0.114,
+    "exact_match": 0.2
+  },
+  "standard_seed1/first": {
+    "n": 500,
+    "acc": 0.26,
+    "acc_any_alt": 0.26,
+    "pred_words": 1.472,
+    "gen_tokens": 3.864,
+    "wrong_pred_substring_of_gold": 0.112,
+    "exact_match": 0.208
+  },
+  "standard_seed1/middle": {
+    "n": 500,
+    "acc": 0.262,
+    "acc_any_alt": 0.262,
+    "pred_words": 1.476,
+    "gen_tokens": 3.852,
+    "wrong_pred_substring_of_gold": 0.106,
+    "exact_match": 0.214
+  },
+  "standard_seed1/last": {
+    "n": 500,
+    "acc": 0.236,
+    "acc_any_alt": 0.236,
+    "pred_words": 1.446,
+    "gen_tokens": 3.868,
+    "wrong_pred_substring_of_gold": 0.104,
+    "exact_match": 0.186
+  },
+  "by_gold_len/1": {
+    "n": 282,
+    "frozen": "71.6",
+    "balanced_s0_seed0": "38.3",
+    "balanced_s1_seed1": "36.9",
+    "standard_seed0": "41.1",
+    "standard_seed1": "35.8"
+  },
+  "by_gold_len/2-3": {
+    "n": 162,
+    "frozen": "59.9",
+    "balanced_s0_seed0": "19.8",
+    "balanced_s1_seed1": "18.5",
+    "standard_seed0": "16.0",
+    "standard_seed1": "17.9"
+  },
+  "by_gold_len/4-7": {
+    "n": 42,
+    "frozen": "35.7",
+    "balanced_s0_seed0": "0.0",
+    "balanced_s1_seed1": "2.4",
+    "standard_seed0": "0.0",
+    "standard_seed1": "0.0"
+  },
+  "by_gold_len/8+": {
+    "n": 14,
+    "frozen": "7.1",
+    "balanced_s0_seed0": "0.0",
+    "balanced_s1_seed1": "0.0",
+    "standard_seed0": "0.0",
+    "standard_seed1": "0.0"
+  }
+}

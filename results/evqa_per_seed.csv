@@ -1,0 +1,6 @@
+run,gold_first,gold_middle,gold_last,gap
+frozen,63.0,39.6,35.8,27.2
+standard_seed0,28.4,27.4,24.4,4.0
+standard_seed1,26.0,26.2,23.6,2.4
+balanced_s0_seed0,28.0,29.4,27.8,0.2
+balanced_s1_seed1,27.0,26.8,27.4,-0.4
